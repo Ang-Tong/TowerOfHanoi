@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Certik take-home Atong</title>
+	<link rel="icon" href="icon.png">
+	<style>
+	body {
+		background-image: url("backgroundHanoi.png");
+		background-position: center;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+	.container{
+		width: 650px;
+		margin-top: -150px;
+		margin-left: 350px;
+		padding: 100px;
+	}
+	p {
+		color: white;
+		text-align: center;
+		margin-top: 50px;
+		font-family: 'Exo 2', sans-serif;
+		font-style: italic;
+		font-size: 100px;
+	}
+	.droppable {
+  height: 200px;
+  width: 210px;      
+  float: left;
+  position: relative;
+  border-bottom: 10px solid black;
+}
+
+.draggable {
+  height: 25px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.disk1 {
+  background-color: yellow;
+  width:200px;
+}
+
+.disk2 {
+  background-color: red;
+  width:160px;
+}
+
+.disk3 {
+  background-color: green;
+  width:120px;
+}
+
+.stackarea{
+  width: 210px;
+  position: absolute;
+  bottom: 0px;
+}
+
+.pole {
+    width : 20px;
+    height: 150px;
+    background-color: black;
+    margin: 0 94px;
+    position: absolute;
+    bottom : 0px; 
+    z-index: -1;   
+}
+	</style>
+	<link href="https://fonts.googleapis.com/css?family=Exo+2:200i,300" rel="stylesheet">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+  crossorigin="anonymous"></script>
+  <script>
+  	var drag = ".draggable";
+  	var selectDisk = ".stackarea";
+  	var aWidth = "width";
+  	var lastPole = "t3";
+  	var numOfDisks = "3";
+
+  	$(function() {
+        initialize();
+      });
+
+      function initialize() {
+        $("#effect").hide();
+        initdrag();
+        initdrop();
+      }
+
+      function initdrag() {
+        $(drag).draggable({
+           revert: "invalid",
+           stack: $(drag),
+           helper: "clone",
+           cursor: "move",
+           addClasses: "false",
+           start: function(event, ui) {
+              return checkdrag($(event.target).parent(), event.target);
+            }
+        });
+      }
+
+      function initdrop() {
+        $(".droppable").droppable({
+           accept: drag,
+           drop: function(event, ui) {
+            var targetTower = $(this).find(selectDisk);
+            if (checkValidMove(targetTower, ui.draggable)) {
+              $(ui.draggable).prependTo(targetTower);
+            } else {
+              //showMessage(myMessages[0]);
+            }
+
+            if (isDone(event.target)) {
+              //showMessage(myMessages[1]);
+            }
+           } 
+        });
+      }
+      function checkdrag(parent, child) {
+        return $(parent).children()[0].id == child.id;
+      }
+      function checkValidMove(parent, child) {
+        var children = $(parent).children();
+        return (children.length == 0) || (children.css(aWidth) >= child.css(aWidth));
+      }
+      function isDone(parent) {
+        return ((parent.id == lastPole) && ($(parent).find(selectDisk).children().length == numOfDisks));
+      }
+
+
+  </script>
+ 
+</head>
+<body>
+	<p> Towers Of Hanoi </p>
+<div class="container">
+	<div class="droppable" id ="t1">
+		<div class="pole"></div>
+		<div class="stackarea">
+		<div class="draggable disk3"> </div>
+		<div class="draggable disk2"> </div>
+		<div class="draggable disk1"> </div>
+		</div>
+	</div>
+
+	<div class="droppable" id= "t2">
+		<div class = "pole"></div>
+		<div class="stackarea"></div>
+	</div>
+
+	<div class="droppable" id="t3">
+		<div class="pole"></div>
+		<div class="stackarea"></div>
+	</div>
+</div>
+</body>
+</html>
